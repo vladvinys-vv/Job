@@ -1,0 +1,14 @@
+﻿# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+.cache/
