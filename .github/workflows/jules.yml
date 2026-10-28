@@ -1,0 +1,32 @@
+name: Google Jules Verification
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  jules-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Validate Jules configuration
+        run: |
+          test -f .jules/config.json || exit 1
+          test -f .jules/rules.md || exit 1
+          echo "Jules configuration validated successfully."
+
+      - name: Install dependencies
+        run: pip install httpx pytest pytest-asyncio
+
+      - name: Run Pytest Suite
+        run: pytest -v

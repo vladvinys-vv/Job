@@ -1,0 +1,14 @@
+{
+  "project_name": "Job",
+  "language": "python",
+  "setup_commands": [
+    "pip install -r requirements.txt"
+  ],
+  "test_commands": [
+    "pytest -v"
+  ],
+  "lint_commands": [
+    "python -m py_compile src/*.py"
+  ],
+  "agent_instructions": ".jules/rules.md"
+}
