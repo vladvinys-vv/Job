@@ -1,15 +1,29 @@
-﻿# Job - Agent Guidelines
+# Job — Agent Guidelines
 
-## 1. Overview
-Job is a repository managed by vladvinys-vv.
-Standardized on default branch main.
+## 1. Project Overview
+Job is an automated job discovery, search filtering, and tracking application for the German labor market, integrating the official REST APIs of the Bundesagentur für Arbeit (`jobsuche.arbeitsagentur.de`).
+
+---
 
 ## 2. Directory Layout
-- README.md: Project description.
-- .gitignore: Standard exclusion rules.
-- AGENTS.md: Guidelines for AI agents and automated tools.
-- HANDOFF.md: Project status and handoff notes.
+- `src/`:
+  - `jobsuche_client.py`: Asynchronous API client for querying BA Jobsuche endpoints.
+  - `job_tracker.py`: Local SQLite application pipeline and state manager.
+- `requirements.txt`: Python dependencies (`httpx`, `pydantic`, `pytest`).
+- `README.md`: Architecture and usage guide.
 
-## 3. Workflow Rules
-- Target branch is main.
-- Ensure clean commits and avoid committing sensitive credentials or temporary files.
+---
+
+## 3. Development Commands
+```bash
+pip install -r requirements.txt
+python -m py_compile src/jobsuche_client.py src/job_tracker.py
+pytest tests/
+```
+
+---
+
+## 4. Key Constraints & Data Privacy
+1. **Never Commit SQLite Database:** `job_applications.db` and any personal CV or resume data must remain local and ignored by `.gitignore`.
+2. **API Rate Limiting:** Apply polite request pacing when paginating through job postings.
+3. **Branch Discipline:** Default target branch is `main`.
