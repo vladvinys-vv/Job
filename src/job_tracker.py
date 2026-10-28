@@ -7,7 +7,7 @@ from __future__ import annotations
 import sqlite3
 from dataclasses import dataclass
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 @dataclass
@@ -53,7 +53,7 @@ class JobTrackerDB:
                 INSERT OR IGNORE INTO applications (job_id, title, company, city, status, updated_at, notes)
                 VALUES (?, ?, ?, ?, 'FOUND', ?, ?)
                 """,
-                (job_id, title, company, city, datetime.utcnow().isoformat(), notes or ""),
+                (job_id, title, company, city, datetime.now(timezone.utc).isoformat(), notes or ""),
             )
             conn.commit()
 
@@ -65,7 +65,7 @@ class JobTrackerDB:
                 SET status = ?, notes = coalesce(?, notes), updated_at = ?
                 WHERE job_id = ?
                 """,
-                (status, notes, datetime.utcnow().isoformat(), job_id),
+                (status, notes, datetime.now(timezone.utc).isoformat(), job_id),
             )
             conn.commit()
 
