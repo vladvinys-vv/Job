@@ -37,12 +37,25 @@ def test_job_tracker_db(tmp_path):
     assert apps[0].job_id == "12345"
     assert apps[0].status == "FOUND"
 
-    # 2. Update status
+    # 2. Get single job
+    job = tracker.get_job("12345")
+    assert job is not None
+    assert job.title == "Fullstack Developer"
+    assert tracker.get_job("non-existent") is None
+
+    # 3. Update status
     tracker.update_status(job_id="12345", status="APPLIED", notes="Interview scheduled")
     applied_apps = tracker.list_applications(status="APPLIED")
     assert len(applied_apps) == 1
     assert applied_apps[0].status == "APPLIED"
     assert "Interview" in applied_apps[0].notes
+
+    # 4. Delete job
+    deleted = tracker.delete_job("12345")
+    assert deleted is True
+    assert tracker.get_job("12345") is None
+    assert tracker.delete_job("12345") is False
+    assert len(tracker.list_applications()) == 0
 
 
 @pytest.mark.asyncio
