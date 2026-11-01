@@ -69,6 +69,32 @@ class JobTrackerDB:
             )
             conn.commit()
 
+    def get_job(self, job_id: str) -> Optional[TrackedApplication]:
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute(
+                "SELECT id, job_id, title, company, city, status, applied_date, notes FROM applications WHERE job_id = ?",
+                (job_id,),
+            )
+            row = cursor.fetchone()
+            if not row:
+                return None
+            return TrackedApplication(
+                id=row[0],
+                job_id=row[1],
+                title=row[2],
+                company=row[3],
+                city=row[4],
+                status=row[5],
+                applied_date=row[6],
+                notes=row[7],
+            )
+
+    def delete_job(self, job_id: str) -> bool:
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute("DELETE FROM applications WHERE job_id = ?", (job_id,))
+            conn.commit()
+            return cursor.rowcount > 0
+
     def list_applications(self, status: Optional[str] = None) -> List[TrackedApplication]:
         with sqlite3.connect(self.db_path) as conn:
             if status:
